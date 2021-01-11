@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run unit && npm run integration",
-    "unit": "istanbul cover --include-all-sources jasmine-node spec/unit",
-    "integration": "istanbul cover --include-all-sources jasmine-node spec/integration",
-    "lint": "eslint src/js"
+    "test": "istanbul cover --include-all-sources jasmine-node spec",
+    "lint": "eslint lib/"
   },
   "author": "Constantine Akritides",
   "license": "ISC",

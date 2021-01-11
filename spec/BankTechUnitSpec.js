@@ -1,4 +1,4 @@
-const BankTech = require('../../lib/BankTech');
+const BankTech = require('../lib/BankTech');
 
 describe('BankTech', function() {
     let bankTech;
@@ -45,23 +45,31 @@ describe('BankTech', function() {
     })
 
     describe("Account Statement Functionality", function() {
-        it('creates a transaction history upon initialisation', function() {
-            expect(bankTech.transactionHistory).toEqual({});
-            expect(bankTech.printAccountStatement).toBeDefined();
-        });
 
         it('creates an empty account statement upon initialisation', function() {
+            expect(bankTech.printAccountStatement).toBeDefined();
             expect(bankTech.accountStatement).toEqual("date || credit || debit || balance");
         });
 
         it('adds a deposit transaction to the transactions history', function() {
             bankTech.deposit(DEPOSIT_AMOUNT);
-            expect(bankTech.printAccountStatement()).toEqual(
+            expect(bankTech.accountStatement).toEqual(
                 'date || credit || debit || balance\n' + 
                 '11/1/2021 || || 500.00 || 0'
             );
         });
+
         it('adds a withdrawal transaction to the transactions history', function() {
+            bankTech.deposit(DEPOSIT_AMOUNT);
+            bankTech.withdraw(WITHDRAWAL_AMOUNT);
+            expect(bankTech.accountStatement).toEqual(
+                'date || credit || debit || balance\n' + 
+                '11/1/2021 || || 500.00 || 0\n' +
+                '11/1/2021 || 250.00 || || 500'
+            );
+        });
+
+        it('returns the account Statement to the user', function() {
             bankTech.deposit(DEPOSIT_AMOUNT);
             bankTech.withdraw(WITHDRAWAL_AMOUNT);
             expect(bankTech.printAccountStatement()).toEqual(
@@ -69,6 +77,7 @@ describe('BankTech', function() {
                 '11/1/2021 || || 500.00 || 0\n' +
                 '11/1/2021 || 250.00 || || 500'
             );
-        });
+        })
+
     })
 })
