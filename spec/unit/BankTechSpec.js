@@ -7,7 +7,6 @@ describe('BankTech', function() {
 
     beforeEach(function() {
         bankTech = new BankTech();
-        // bankTech.balance = 0;
     })
 
     describe("Tracking Balance", function() {
@@ -16,7 +15,7 @@ describe('BankTech', function() {
         });
 
         it('returns the current balance when currentBalance is called', function() {
-            expect(bankTech.currentBalance()).toBeDefined();
+            expect(bankTech.currentBalance).toBeDefined();
             expect(bankTech.currentBalance()).toEqual(0);
         });
     })
@@ -33,10 +32,16 @@ describe('BankTech', function() {
     })
 
     describe("Withdrawal Functionality", function() {
+        it('withdraws money from the account using the withdrawal function', function() {
+            expect(bankTech.withdraw).toBeDefined();
+        });
+
         it('uses the withdrawal function to withdraw funds from the account', function() {
             bankTech.deposit(DEPOSIT_AMOUNT);
             bankTech.withdraw(WITHDRAWAL_AMOUNT);
             expect(bankTech.currentBalance()).toEqual(DEPOSIT_AMOUNT - WITHDRAWAL_AMOUNT);
-        })
+        });
     })
+
+    
 })
