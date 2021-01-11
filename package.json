@@ -1,0 +1,22 @@
+{
+  "name": "bank-tect-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run unit && npm run integration",
+    "unit": "istanbul cover --include-all-sources jasmine-node spec/unit",
+    "integration": "istanbul cover --include-all-sources jasmine-node spec/integration",
+    "lint": "eslint src/js"
+  },
+  "author": "Constantine Akritides",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "istanbul": "^0.4.5"
+  },
+  "dependencies": {
+    "jasmine-console-reporter": "^3.1.0",
+    "jasmine-node": "^3.0.0"
+  }
+}
