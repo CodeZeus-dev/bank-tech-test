@@ -44,7 +44,7 @@ Withdrawal Feature
 > <br> So that I can take money out of my account,
 > <br> I want to be able to withdraw funds.
 
-Account Statement
+Account Statement Feature
 
 > As a customer of the bank,
 > <br> So that I can keep track of my balance and transactions,
