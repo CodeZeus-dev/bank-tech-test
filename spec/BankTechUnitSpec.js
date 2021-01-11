@@ -7,8 +7,12 @@ describe('BankTech', function() {
 
     beforeEach(function() {
         bankTech = new BankTech();
-        console.log = jasmine.createSpy("log");
+        process.env.NODE_ENV = 'test';
     })
+
+    afterEach(() => {
+        delete process.env.NODE_ENV;
+    });
 
     describe("Tracking Balance", function() {
         it('creates a balance upon initialisation', function() {
@@ -72,12 +76,12 @@ describe('BankTech', function() {
         it('returns the account Statement to the user', function() {
             bankTech.deposit(DEPOSIT_AMOUNT);
             bankTech.withdraw(WITHDRAWAL_AMOUNT);
-            expect(bankTech.printAccountStatement()).toEqual(
+            expect(bankTech.printAccountStatement()).toBe(
                 'date || credit || debit || balance\n' + 
                 '11/1/2021 || || 500.00 || 0\n' +
                 '11/1/2021 || 250.00 || || 500'
             );
-        })
+        });
 
     })
 })

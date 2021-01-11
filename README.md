@@ -50,3 +50,61 @@ Account Statement Feature
 > <br> So that I can keep track of my balance and transactions,
 > <br> I want to be able to print my account statement.
 
+<hr>
+
+## How to use the app
+
+Clone the current repository
+
+```bash
+$ git clone https://github.com/CodeZeus-dev/bank-tech-test.git
+```
+
+Go to the root directory of your cloned local repo and install all necessary Node packages
+
+```bash
+$ npm install
+```
+
+Run Node
+
+```bash
+$ node
+```
+
+Require the file containing the BankTech class
+
+```bash
+$ const Bank = require('./lib/BankTech');
+```
+
+Create an instance of the Bank Class
+
+```bash
+const atm = new Bank();
+```
+
+#### To deposit an amount (e.g. $500)
+
+```bash
+$ atm.deposit(500);
+```
+#### To withdraw an amount (e.g. $250)
+
+```bash
+$ atm.withdraw(250);
+```
+
+#### To check the current balance
+
+```bash
+$ atm.currentBalance();
+```
+
+#### To print the Account Statement
+
+```bash
+$ atm.printAccountStatement();
+```
+
+
