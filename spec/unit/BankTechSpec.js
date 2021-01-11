@@ -3,9 +3,11 @@ const BankTech = require('../../lib/BankTech');
 describe('BankTech', function() {
     let bankTech;
     const DEPOSIT_AMOUNT = 500;
+    const WITHDRAWAL_AMOUNT = 250;
 
     beforeEach(function() {
         bankTech = new BankTech();
+        // bankTech.balance = 0;
     })
 
     describe("Tracking Balance", function() {
@@ -28,6 +30,13 @@ describe('BankTech', function() {
             bankTech.deposit(DEPOSIT_AMOUNT);
             expect(bankTech.currentBalance()).toEqual(DEPOSIT_AMOUNT);
         });
+    })
 
+    describe("Withdrawal Functionality", function() {
+        it('uses the withdrawal function to withdraw funds from the account', function() {
+            bankTech.deposit(DEPOSIT_AMOUNT);
+            bankTech.withdraw(WITHDRAWAL_AMOUNT);
+            expect(bankTech.currentBalance()).toEqual(DEPOSIT_AMOUNT - WITHDRAWAL_AMOUNT);
+        })
     })
 })
