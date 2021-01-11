@@ -4,10 +4,12 @@ describe('BankTech', function() {
     let bankTech;
     const DEPOSIT_AMOUNT = 500;
     const WITHDRAWAL_AMOUNT = 250;
+    let transactionDate;
 
     beforeEach(function() {
         bankTech = new BankTech();
         process.env.NODE_ENV = 'test';
+        transactionDate = new Date().toLocaleDateString("en-US").split("/");
     })
 
     afterEach(() => {
@@ -59,7 +61,7 @@ describe('BankTech', function() {
             bankTech.deposit(DEPOSIT_AMOUNT);
             expect(bankTech.accountStatement).toEqual(
                 'date || credit || debit || balance\n' + 
-                '11/1/2021 || || 500.00 || 0'
+                `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0`
             );
         });
 
@@ -68,8 +70,8 @@ describe('BankTech', function() {
             bankTech.withdraw(WITHDRAWAL_AMOUNT);
             expect(bankTech.accountStatement).toEqual(
                 'date || credit || debit || balance\n' + 
-                '11/1/2021 || || 500.00 || 0\n' +
-                '11/1/2021 || 250.00 || || 500'
+                `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0\n` +
+                `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
             );
         });
 
@@ -78,8 +80,8 @@ describe('BankTech', function() {
             bankTech.withdraw(WITHDRAWAL_AMOUNT);
             expect(bankTech.printAccountStatement()).toBe(
                 'date || credit || debit || balance\n' + 
-                '11/1/2021 || || 500.00 || 0\n' +
-                '11/1/2021 || 250.00 || || 500'
+                `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0\n` +
+                `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
             );
         });
 
