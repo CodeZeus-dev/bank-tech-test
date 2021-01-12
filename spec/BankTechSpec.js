@@ -1,7 +1,9 @@
 const BankTech = require("../lib/BankTech");
+const Transaction = require("../lib/Transaction");
 
 describe("BankTech", function () {
   let bankTech;
+  const MIN_BALANCE = 0;
   const DEPOSIT_AMOUNT = 500;
   const WITHDRAWAL_AMOUNT = 250;
   let transactionDate;
@@ -9,6 +11,7 @@ describe("BankTech", function () {
   beforeEach(function () {
     bankTech = new BankTech();
     process.env.NODE_ENV = "test";
+    Transaction.transactions = ["date || credit || debit || balance"];
     transactionDate = new Date().toLocaleDateString("en-US").split("/");
   });
 
@@ -17,13 +20,9 @@ describe("BankTech", function () {
   });
 
   describe("Tracking Balance", function () {
-    it("creates a balance upon initialisation", function () {
-      expect(bankTech.balance).toEqual(BankTech.MIN_BALANCE);
-    });
-
     it("returns the current balance when accountBalance is called", function () {
       expect(bankTech.accountBalance).toBeDefined();
-      expect(bankTech.accountBalance()).toEqual(BankTech.MIN_BALANCE);
+      expect(bankTech.accountBalance()).toEqual(MIN_BALANCE);
     });
   });
 
@@ -46,24 +45,21 @@ describe("BankTech", function () {
     it("uses the withdrawal function to withdraw funds from the account", function () {
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
-      expect(bankTech.currentBalance()).toEqual(
+      expect(bankTech.accountBalance()).toEqual(
         DEPOSIT_AMOUNT - WITHDRAWAL_AMOUNT
       );
     });
   });
 
   describe("Account Statement Functionality", function () {
-    it("creates an empty account statement upon initialisation", function () {
+    it("prints the account statement using the printAccountStatement function", function () {
       expect(bankTech.printAccountStatement).toBeDefined();
-      expect(bankTech.accountStatement).toEqual(
-        "date || credit || debit || balance"
-      );
     });
 
     it("adds a deposit transaction to the transactions history", function () {
       bankTech.deposit(DEPOSIT_AMOUNT);
-      expect(bankTech.accountStatement).toEqual(
-        "date || credit || debit || balance\n" +
+      expect(bankTech.printAccountStatement().join()).toEqual(
+        "date || credit || debit || balance," +
           `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0`
       );
     });
@@ -71,19 +67,19 @@ describe("BankTech", function () {
     it("adds a withdrawal transaction to the transactions history", function () {
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
-      expect(bankTech.accountStatement).toEqual(
-        "date || credit || debit || balance\n" +
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0\n` +
+      expect(bankTech.printAccountStatement().join()).toEqual(
+        "date || credit || debit || balance," +
+          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0,` +
           `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
       );
     });
 
-    it("returns the account Statement to the user", function () {
+    it("returns the account Statement to the user for various transaction dates", function () {
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
-      expect(bankTech.printAccountStatement()).toBe(
-        "date || credit || debit || balance\n" +
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0\n` +
+      expect(bankTech.printAccountStatement().join()).toBe(
+        "date || credit || debit || balance," +
+          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0,` +
           `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
       );
     });
