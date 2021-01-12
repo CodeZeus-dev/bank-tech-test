@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc jasmine",
+    "coverage": "nyc npm run test",
     "lint": "eslint lib/"
   },
   "author": "Constantine Akritides",
@@ -15,10 +16,20 @@
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "istanbul": "^0.4.5",
+    "nyc": "^15.1.0",
     "prettier": "^2.2.1"
   },
   "dependencies": {
     "jasmine-console-reporter": "^3.1.0",
     "jasmine-node": "^3.0.0"
+  },
+  "nyc": {
+    "all": true,
+    "include": [
+      "lib/*.js"
+    ],
+    "exclude": [
+      "spec/*Spec.js"
+    ]
   }
 }
