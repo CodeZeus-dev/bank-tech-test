@@ -8,6 +8,22 @@ describe("BankTech", function () {
   const WITHDRAWAL_AMOUNT = 250;
   let transactionDate;
 
+  let account = {
+    balance: 0
+  };
+
+  account.currentBalance = function () {
+    return account.balance;
+  };
+
+  account.updateBalance = function (type, amount) {
+    if (type === "debit") {
+        account.balance += amount;
+    } else if (type === "credit") {
+      account.balance -= amount;
+    }
+  };
+
   beforeEach(function () {
     bankTech = new BankTech();
     process.env.NODE_ENV = "test";
