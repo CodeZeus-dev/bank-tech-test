@@ -21,9 +21,9 @@ describe("BankTech", function () {
       expect(bankTech.balance).toEqual(BankTech.MIN_BALANCE);
     });
 
-    it("returns the current balance when currentBalance is called", function () {
-      expect(bankTech.currentBalance).toBeDefined();
-      expect(bankTech.currentBalance()).toEqual(BankTech.MIN_BALANCE);
+    it("returns the current balance when accountBalance is called", function () {
+      expect(bankTech.accountBalance).toBeDefined();
+      expect(bankTech.accountBalance()).toEqual(BankTech.MIN_BALANCE);
     });
   });
 
@@ -34,7 +34,7 @@ describe("BankTech", function () {
 
     it("enables a user to deposit money to account", function () {
       bankTech.deposit(DEPOSIT_AMOUNT);
-      expect(bankTech.currentBalance()).toEqual(DEPOSIT_AMOUNT);
+      expect(bankTech.accountBalance()).toEqual(DEPOSIT_AMOUNT);
     });
   });
 
