@@ -27,12 +27,18 @@ describe("BankTech", function () {
   beforeEach(function () {
     bankTech = new BankTech();
     process.env.NODE_ENV = "test";
-    Transaction.transactions = ["date || credit || debit || balance"];
     transactionDate = new Date().toLocaleDateString("en-US").split("/");
+    if (transactionDate[0].length === 1) {
+      transactionDate[0] = '0' + transactionDate[0];
+    }
+    if (transactionDate[1].length === 1) {
+      transactionDate[1] = '0' + transactionDate[1];
+    }
   });
 
   afterEach(() => {
     delete process.env.NODE_ENV;
+    Transaction.transactions = [];
   });
 
   describe("Tracking Balance", function () {
@@ -76,7 +82,7 @@ describe("BankTech", function () {
       bankTech.deposit(DEPOSIT_AMOUNT);
       expect(bankTech.printAccountStatement().join()).toEqual(
         "date || credit || debit || balance," +
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0`
+          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 500`
       );
     });
 
@@ -85,8 +91,8 @@ describe("BankTech", function () {
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
       expect(bankTech.printAccountStatement().join()).toEqual(
         "date || credit || debit || balance," +
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0,` +
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
+          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 250,` +
+          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 500`
       );
     });
 
@@ -100,10 +106,9 @@ describe("BankTech", function () {
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
       expect(bankTech.printAccountStatement().join()).toEqual(
         "date || credit || debit || balance," +
-          `10/01/2012 || || 500.00 || 0,` +
-          `13/01/2012 || || 500.00 || 500,` +
-          `14/01/2012 || || 500.00 || 0,`
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
+          `14/01/2012 || 250.00 || || 750,` +
+          `13/01/2012 || || 500.00 || 1000,` +
+          `10/01/2012 || || 500.00 || 500`                   
       );
     });
   });

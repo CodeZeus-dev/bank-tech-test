@@ -10,10 +10,17 @@ describe('Transaction', function () {
     process.env.NODE_ENV = "test";
     testTransaction = new Transaction();
     transactionDate = new Date().toLocaleDateString("en-US").split("/");
+    if (transactionDate[0].length === 1) {
+      transactionDate[0] = '0' + transactionDate[0];
+    }
+    if (transactionDate[1].length === 1) {
+      transactionDate[1] = '0' + transactionDate[1];
+    }
   });
 
   afterEach(() => {
     delete process.env.NODE_ENV;
+    Transaction.transactions = [];
   });
 
   describe("Recording Transactions Functionality", function () {
@@ -22,16 +29,16 @@ describe('Transaction', function () {
     });
 
     it("records a debit transaction", function () {
-      testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE);
+      testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
       expect(Transaction.transactions).toContain(
-        `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 250`
+        `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 750`
       );
     });
 
     it("records a credit transaction", function () {
-      testTransaction.recordTransaction("credit", CREDIT_AMOUNT, ACCOUNT_BALANCE);
+      testTransaction.recordTransaction("credit", CREDIT_AMOUNT, ACCOUNT_BALANCE - CREDIT_AMOUNT);
       expect(Transaction.transactions).toContain(
-        `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 100.00 || || 250`
+        `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 100.00 || || 150`
       );
     });
   });
@@ -42,11 +49,10 @@ describe('Transaction', function () {
     });
 
     it("requests the list of transactions for the account statement", function () {
-      Transaction.transactions = ["date || credit || debit || balance"];
-      testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE);
+      testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
       expect(JSON.stringify(testTransaction.requestTransactions())).toEqual(JSON.stringify([
         "date || credit || debit || balance",
-        `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 250`
+        `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 750`
       ]));
     });
   });
