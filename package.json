@@ -4,22 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "istanbul cover --include-all-sources jasmine-node spec",
+    "test": "nyc jasmine",
     "lint": "eslint lib/"
   },
   "author": "Constantine Akritides",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^7.17.0",
-    "istanbul": "^0.4.5"
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "istanbul": "^0.4.5",
+    "prettier": "^2.2.1"
   },
   "dependencies": {
     "jasmine-console-reporter": "^3.1.0",
     "jasmine-node": "^3.0.0"
-  },
-  "nyc": {
-    "exclude": [
-      "spec/helpers/*.js"
-    ]
   }
 }
