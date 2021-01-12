@@ -89,5 +89,22 @@ describe("BankTech", function () {
           `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
       );
     });
+
+    it("prints the account statement with transactions on multiple dates", function () {
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date(2011, 12, 10));
+      bankTech.deposit(DEPOSIT_AMOUNT);
+      jasmine.clock().mockDate(new Date(2011, 12, 13));
+      bankTech.deposit(DEPOSIT_AMOUNT);
+      jasmine.clock().mockDate(new Date(2011, 12, 14));
+      bankTech.withdraw(WITHDRAWAL_AMOUNT);
+      expect(bankTech.printAccountStatement().join()).toEqual(
+        "date || credit || debit || balance," +
+          `10/01/2012 || || 500.00 || 0,` +
+          `13/01/2012 || || 500.00 || 500,` +
+          `14/01/2012 || || 500.00 || 0,`
+          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
+      );
+    });
   });
 });
