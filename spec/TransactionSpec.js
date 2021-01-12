@@ -12,6 +12,10 @@ describe('Transaction', function () {
     transactionDate = new Date().toLocaleDateString("en-US").split("/");
   });
 
+  afterEach(() => {
+    delete process.env.NODE_ENV;
+  });
+
   describe("Recording Transactions Functionality", function () {
     it("records a transaction using the recordTransaction function", function () {
       expect(testTransaction.recordTransaction).toBeDefined();

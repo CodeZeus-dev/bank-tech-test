@@ -73,15 +73,5 @@ describe("BankTech", function () {
           `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
       );
     });
-
-    it("returns the account Statement to the user for various transaction dates", function () {
-      bankTech.deposit(DEPOSIT_AMOUNT);
-      bankTech.withdraw(WITHDRAWAL_AMOUNT);
-      expect(bankTech.printAccountStatement().join()).toBe(
-        "date || credit || debit || balance," +
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || || 500.00 || 0,` +
-          `${transactionDate[1]}/${transactionDate[0]}/${transactionDate[2]} || 250.00 || || 500`
-      );
-    });
   });
 });

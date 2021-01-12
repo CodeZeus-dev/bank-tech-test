@@ -52,6 +52,14 @@ Account Statement Feature
 
 <hr>
 
+## Planning & Structure
+
+The following Class Diagram depicts the project structure based on the initial planning and OOP design.
+
+<img width="594" alt="Screenshot 2021-01-12 at 19 10 15" src="https://user-images.githubusercontent.com/65397514/104347992-e598e000-5509-11eb-8fb9-af3aeaf79bdd.png">
+
+The BankTech class creates the interface with which the user interacts, and it depends on the Account and Transaction class from which it extracts information on the account's balance and the transaction history. The BankTech class enables the user to deposit, withdraw and print their account's Statement.
+
 ## How to use the app
 
 Clone the current repository
@@ -107,4 +115,16 @@ $ atm.currentBalance();
 $ atm.printAccountStatement();
 ```
 
+## How to run the tests
 
+To run the tests for the current project, execute the following command in the terminal,
+
+```bash
+$ jasmine
+```
+
+To include the code/test coverage in the tests, run the following,
+
+```bash
+$ npm test
+```
