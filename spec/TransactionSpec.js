@@ -58,12 +58,12 @@ describe('Transaction', function () {
       testTransaction.recordTransaction("debit", DEBIT_AMOUNT, DEBIT_AMOUNT * 2);
       jasmine.clock().mockDate(new Date(2011, 12, 14));
       testTransaction.recordTransaction("credit", ACCOUNT_BALANCE, DEBIT_AMOUNT * 2 - ACCOUNT_BALANCE);
-      expect(JSON.stringify(testTransaction.requestTransactions())).toEqual(JSON.stringify([
+      expect(JSON.stringify(testTransaction.requestTransactions().join(','))).toEqual(JSON.stringify(
         "date || credit || debit || balance," +
           `14/01/2012 || 250.00 || || 750,` +
           `13/01/2012 || || 500.00 || 1000,` +
           `10/01/2012 || || 500.00 || 500`  
-      ]));
+      ));
     });
   });
 });
