@@ -27,14 +27,14 @@ describe('Transaction', function () {
     it("records a debit transaction", function () {
       testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
       expect(Transaction.transactions).toContain(
-        `10/01/2012 || || 500.00 || 750`
+        ["debit", '10/01/2012', '500.00', 750]
       );
     });
 
     it("records a credit transaction", function () {
       testTransaction.recordTransaction("credit", CREDIT_AMOUNT, ACCOUNT_BALANCE - CREDIT_AMOUNT);
       expect(Transaction.transactions).toContain(
-        `10/01/2012 || 100.00 || || 150`
+        ["credit", '10/01/2012', '100.00', 150]
       );
     });
   });
@@ -47,8 +47,7 @@ describe('Transaction', function () {
     it("requests the list of transactions for the account statement", function () {
       testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
       expect(JSON.stringify(testTransaction.requestTransactions())).toEqual(JSON.stringify([
-        "date || credit || debit || balance",
-        `10/01/2012 || || 500.00 || 750`
+        ["debit","10/01/2012","500.00",750]
       ]));
     });
 
@@ -58,12 +57,11 @@ describe('Transaction', function () {
       testTransaction.recordTransaction("debit", DEBIT_AMOUNT, DEBIT_AMOUNT * 2);
       jasmine.clock().mockDate(new Date(2011, 12, 14));
       testTransaction.recordTransaction("credit", ACCOUNT_BALANCE, DEBIT_AMOUNT * 2 - ACCOUNT_BALANCE);
-      expect(JSON.stringify(testTransaction.requestTransactions().join(','))).toEqual(JSON.stringify(
-        "date || credit || debit || balance," +
-          `14/01/2012 || 250.00 || || 750,` +
-          `13/01/2012 || || 500.00 || 1000,` +
-          `10/01/2012 || || 500.00 || 500`  
-      ));
+      expect(testTransaction.requestTransactions()).toEqual([
+        [ 'credit', '14/01/2012', '250.00', 750 ],
+        [ 'debit', '13/01/2012', '500.00', 1000 ],
+        [ 'debit', '10/01/2012', '500.00', 500 ]
+      ]);
     });
   });
 });
