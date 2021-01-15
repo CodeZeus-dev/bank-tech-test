@@ -1,3 +1,5 @@
+'use strict';
+
 const BankTech = require("../lib/BankTech");
 
 describe("BankTech", function () {
