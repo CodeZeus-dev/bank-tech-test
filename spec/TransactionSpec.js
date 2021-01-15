@@ -26,16 +26,22 @@ describe('Transaction', function () {
 
     it("records a debit transaction", function () {
       testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
-      expect(Transaction.transactions).toContain(
-        ["debit", '10/01/2012', '500.00', 750]
-      );
+      expect(Transaction.transactions).toContain({
+        type: "debit", 
+        date: '10/01/2012', 
+        amount: '500.00', 
+        balance: 750
+      });
     });
 
     it("records a credit transaction", function () {
       testTransaction.recordTransaction("credit", CREDIT_AMOUNT, ACCOUNT_BALANCE - CREDIT_AMOUNT);
-      expect(Transaction.transactions).toContain(
-        ["credit", '10/01/2012', '100.00', 150]
-      );
+      expect(Transaction.transactions).toContain({
+        type: "credit", 
+        date: '10/01/2012', 
+        amount: '100.00', 
+        balance: 150
+      });
     });
   });
 
@@ -46,9 +52,12 @@ describe('Transaction', function () {
 
     it("requests the list of transactions for the account statement", function () {
       testTransaction.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
-      expect(JSON.stringify(testTransaction.requestTransactions())).toEqual(JSON.stringify([
-        ["debit","10/01/2012","500.00",750]
-      ]));
+      expect(JSON.stringify(testTransaction.requestTransactions())).toEqual(JSON.stringify([{
+        type: "debit", 
+        date: '10/01/2012', 
+        amount: '500.00', 
+        balance: 750
+      }]));
     });
 
     it("requests the list of transactions for the account statement for multiple dates", function () {
@@ -58,9 +67,24 @@ describe('Transaction', function () {
       jasmine.clock().mockDate(new Date(2011, 12, 14));
       testTransaction.recordTransaction("credit", ACCOUNT_BALANCE, DEBIT_AMOUNT * 2 - ACCOUNT_BALANCE);
       expect(testTransaction.requestTransactions()).toEqual([
-        [ 'credit', '14/01/2012', '250.00', 750 ],
-        [ 'debit', '13/01/2012', '500.00', 1000 ],
-        [ 'debit', '10/01/2012', '500.00', 500 ]
+        {
+          type: "credit", 
+          date: '14/01/2012', 
+          amount: '250.00', 
+          balance: 750
+        },
+        {
+          type: "debit", 
+          date: '13/01/2012', 
+          amount: '500.00', 
+          balance: 1000
+        },
+        {
+          type: "debit", 
+          date: '10/01/2012', 
+          amount: '500.00', 
+          balance: 500
+        }
       ]);
     });
   });
