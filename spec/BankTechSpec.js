@@ -67,9 +67,12 @@ describe("BankTech", function () {
     });
 
     it("adds a deposit transaction to the transactions history", function () {
-      spyOn(transaction, "requestTransactions").and.returnValue([
-        ["debit", "10/01/2012", 500.00, 500]
-      ])
+      spyOn(transaction, "requestTransactions").and.returnValue([{
+        type: "debit", 
+        date: "10/01/2012", 
+        amount: 500.00, 
+        balance: 500
+      }])
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.printAccountStatement()
       expect(console.log).toHaveBeenCalledWith(
@@ -80,8 +83,18 @@ describe("BankTech", function () {
 
     it("adds a withdrawal transaction to the transactions history", function () {
       spyOn(transaction, "requestTransactions").and.returnValue([
-        ["credit", "10/01/2012", 250.00, 250],
-        ["debit", "10/01/2012", 500.00, 500]
+        {
+          type: "credit", 
+          date: "10/01/2012", 
+          amount: 250.00, 
+          balance: 250
+        },
+        {
+          type: "debit", 
+          date: "10/01/2012", 
+          amount: 500.00, 
+          balance: 500
+        }
       ]);
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
@@ -95,9 +108,24 @@ describe("BankTech", function () {
 
     it("prints the account statement with transactions on multiple dates", function () {
       spyOn(transaction, "requestTransactions").and.returnValue([
-        ["credit", "14/01/2012", 250.00, 750],
-        ["debit", "13/01/2012", 500.00, 1000],
-        ["debit", "10/01/2012", 500.00, 500]
+        {
+          type: "credit", 
+          date: "14/01/2012", 
+          amount: 250.00, 
+          balance: 750
+        },
+        {
+          type: "debit", 
+          date: "13/01/2012", 
+          amount: 500.00, 
+          balance: 1000
+        },
+        {
+          type: "debit", 
+          date: "10/01/2012", 
+          amount: 500.00, 
+          balance: 500
+        }
       ]);
       bankTech.deposit(DEPOSIT_AMOUNT);
       jasmine.clock().mockDate(new Date(2011, 12, 13));
