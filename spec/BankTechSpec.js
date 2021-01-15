@@ -13,14 +13,13 @@ describe("BankTech", function () {
 
   beforeEach(function () {
     bankTech = new BankTech(account, transaction);
-    process.env.NODE_ENV = "test";
+    console.log = jasmine.createSpy("log");
     jasmine.clock().install();
     jasmine.clock().mockDate(new Date(2011, 12, 10));
   });
 
   afterEach(() => {
     jasmine.clock().uninstall();
-    delete process.env.NODE_ENV;
     transaction.transactions = [];
     account.balance = MIN_BALANCE;
   });
@@ -66,14 +65,14 @@ describe("BankTech", function () {
     });
 
     it("adds a deposit transaction to the transactions history", function () {
-      spyOn(transaction, "requestTransactions").and.returnValue(
-        "date || credit || debit || balance," +
-          `10/01/2012 || || 500.00 || 500`
-      )
+      spyOn(transaction, "requestTransactions").and.returnValue([
+        ["debit", "10/01/2012", 500.00, 500]
+      ])
       bankTech.deposit(DEPOSIT_AMOUNT);
-      expect(bankTech.printAccountStatement()).toEqual(
-        "date || credit || debit || balance," +
-          `10/01/2012 || || 500.00 || 500`
+      bankTech.printAccountStatement()
+      expect(console.log).toHaveBeenCalledWith(
+        "date || credit || debit || balance" +
+          `\n10/01/2012 || || 500 || 500`
       );
     });
 
@@ -84,29 +83,31 @@ describe("BankTech", function () {
       ]);
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
-      expect(bankTech.printAccountStatement()).toEqual([
-        [ 'credit', '10/01/2012', 250, 250 ], 
-        [ 'debit', '10/01/2012', 500, 500 ]
-      ]);
+      bankTech.printAccountStatement();
+      expect(console.log).toHaveBeenCalledWith(
+        "date || credit || debit || balance" +
+        "\n10/01/2012 || 250 || || 250" +
+        "\n10/01/2012 || || 500 || 500"
+      );
     });
 
     it("prints the account statement with transactions on multiple dates", function () {
-      spyOn(transaction, "requestTransactions").and.returnValue(
-        "date || credit || debit || balance," +
-          `14/01/2012 || 250.00 || || 750,` +
-          `13/01/2012 || || 500.00 || 1000,` +
-          `10/01/2012 || || 500.00 || 500`
-      )
+      spyOn(transaction, "requestTransactions").and.returnValue([
+        ["credit", "14/01/2012", 250.00, 750],
+        ["debit", "13/01/2012", 500.00, 1000],
+        ["debit", "10/01/2012", 500.00, 500]
+      ]);
       bankTech.deposit(DEPOSIT_AMOUNT);
       jasmine.clock().mockDate(new Date(2011, 12, 13));
       bankTech.deposit(DEPOSIT_AMOUNT);
       jasmine.clock().mockDate(new Date(2011, 12, 14));
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
-      expect(bankTech.printAccountStatement()).toEqual(
-        "date || credit || debit || balance," +
-          `14/01/2012 || 250.00 || || 750,` +
-          `13/01/2012 || || 500.00 || 1000,` +
-          `10/01/2012 || || 500.00 || 500`                   
+      bankTech.printAccountStatement();
+      expect(console.log).toHaveBeenCalledWith(
+        "date || credit || debit || balance" +
+          `\n14/01/2012 || 250 || || 750` +
+          `\n13/01/2012 || || 500 || 1000` +
+          `\n10/01/2012 || || 500 || 500`
       );
     });
   });

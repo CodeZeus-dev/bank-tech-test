@@ -7,7 +7,6 @@ describe('Transaction', function () {
   const ACCOUNT_BALANCE = 250;
 
   beforeEach(() => {
-    process.env.NODE_ENV = "test";
     testTransaction = new Transaction();
     jasmine.clock().install();
     jasmine.clock().mockDate(new Date(2011, 12, 10));
@@ -15,7 +14,6 @@ describe('Transaction', function () {
 
   afterEach(() => {
     jasmine.clock().uninstall();
-    delete process.env.NODE_ENV;
     Transaction.transactions = [];
   });
 
