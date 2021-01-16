@@ -1,3 +1,5 @@
+'use strict';
+
 const BankTech = require("../lib/BankTech");
 
 describe("BankTech", function () {
@@ -20,7 +22,7 @@ describe("BankTech", function () {
 
   afterEach(() => {
     jasmine.clock().uninstall();
-    transaction.transactions = [];
+    transactionList.transactions = [];
     account.balance = MIN_BALANCE;
   });
 
@@ -65,22 +67,24 @@ describe("BankTech", function () {
     });
 
     it("adds a deposit transaction to the transactions history", function () {
-      spyOn(transaction, "requestTransactions").and.returnValue([
-        ["debit", "10/01/2012", 500.00, 500]
-      ])
+      spyOn(transactionList, "requestTransactions").and.returnValue(
+        "date || credit || debit || balance\n" + 
+        "10/01/2012 || || 500.00 || 500"
+      )
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.printAccountStatement()
       expect(console.log).toHaveBeenCalledWith(
         "date || credit || debit || balance" +
-          `\n10/01/2012 || || 500 || 500`
+          `\n10/01/2012 || || 500.00 || 500`
       );
     });
 
     it("adds a withdrawal transaction to the transactions history", function () {
-      spyOn(transaction, "requestTransactions").and.returnValue([
-        ["credit", "10/01/2012", 250.00, 250],
-        ["debit", "10/01/2012", 500.00, 500]
-      ]);
+      spyOn(transactionList, "requestTransactions").and.returnValue(
+        "date || credit || debit || balance" +
+        "\n10/01/2012 || 250 || || 250" +
+        "\n10/01/2012 || || 500 || 500"
+      );
       bankTech.deposit(DEPOSIT_AMOUNT);
       bankTech.withdraw(WITHDRAWAL_AMOUNT);
       bankTech.printAccountStatement();
@@ -92,11 +96,12 @@ describe("BankTech", function () {
     });
 
     it("prints the account statement with transactions on multiple dates", function () {
-      spyOn(transaction, "requestTransactions").and.returnValue([
-        ["credit", "14/01/2012", 250.00, 750],
-        ["debit", "13/01/2012", 500.00, 1000],
-        ["debit", "10/01/2012", 500.00, 500]
-      ]);
+      spyOn(transactionList, "requestTransactions").and.returnValue(
+        "date || credit || debit || balance" +
+          `\n14/01/2012 || 250 || || 750` +
+          `\n13/01/2012 || || 500 || 1000` +
+          `\n10/01/2012 || || 500 || 500`
+      );
       bankTech.deposit(DEPOSIT_AMOUNT);
       jasmine.clock().mockDate(new Date(2011, 12, 13));
       bankTech.deposit(DEPOSIT_AMOUNT);
