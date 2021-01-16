@@ -1,74 +1,75 @@
 'use strict';
 
-const Transaction = require('../lib/Transaction');
+const TransactionList = require('../lib/TransactionList');
 
-describe("Transaction", function () {
-  let transaction;
+describe('TransactionList', function () {
+  let testTransactionList;
+  const DEBIT_AMOUNT = 500;
+  const CREDIT_AMOUNT = 100;
+  const ACCOUNT_BALANCE = 250;
 
   beforeEach(() => {
+    testTransactionList = new TransactionList();
     jasmine.clock().install();
-    jasmine.clock().mockDate(new Date(2012, 10, 5));
-    transaction = new Transaction("debit", 250, 500);
+    jasmine.clock().mockDate(new Date(2011, 12, 10));
   });
 
   afterEach(() => {
     jasmine.clock().uninstall();
-  })
+    TransactionList.transactions = [];
+  });
 
-  describe("Getting Transaction attributes functionality", function () {
-    it("gets the transaction date", function () {
-      expect(transaction.getDate()).toEqual(['11', '05', '2012']);
+  describe("Recording Transactions Functionality", function () {
+    it("records a transaction using the recordTransaction function", function () {
+      expect(testTransactionList.recordTransaction).toBeDefined();
     });
 
-    it("gets the transaction type (debit)", function () {
-      expect(transaction.getType()).toEqual("debit");
+    it("records a debit transaction", function () {
+      testTransactionList.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
+      expect(JSON.stringify(TransactionList.transactions)).toEqual(JSON.stringify([{ 
+        "transType": "debit", 
+        "transAmount": 500, 
+        "transBalance": 750, 
+        "transDate": "10/01/2012"
+      }]));
     });
 
-    it("gets the transaction type (credit)", function () {
-      transaction = new Transaction("credit", 250, 500);
-      expect(transaction.getType()).toEqual("credit");
-    });
-
-    it("gets the transaction amount", function () {
-      expect(transaction.getAmount()).toEqual(250);
-    });
-
-    it("gets the updated balance after the transaction is executed", function () {
-      expect(transaction.getBalance()).toEqual(500);
+    it("records a credit transaction", function () {
+      testTransactionList.recordTransaction("credit", CREDIT_AMOUNT, ACCOUNT_BALANCE - CREDIT_AMOUNT);
+      expect(JSON.stringify(TransactionList.transactions)).toEqual(JSON.stringify([{ 
+        "transType": "credit", 
+        "transAmount": 100, 
+        "transBalance": 150, 
+        "transDate": "10/01/2012"
+      }]));
     });
   });
 
-  describe("Getting the Transaction", function () {
-    it("returns the transaction in the form of an object (debit)", function () {
-      expect(transaction.getTransaction()).toEqual({
-        type: "debit",
-        date: ['11', '05', '2012'],
-        amount: '250.00',
-        balance: 500
-      });
+  describe("Request Transactions Functionality", function () {
+    it("requests the Transactions History using the requestTransactions function", function () {
+      expect(testTransactionList.requestTransactions).toBeDefined();
     });
 
-    it("returns the transaction in the form of an object (credit)", function () {
-      transaction = new Transaction("credit", 250, 500);
-      expect(transaction.getTransaction()).toEqual({
-        type: "credit",
-        date: ['11', '05', '2012'],
-        amount: '250.00',
-        balance: 500
-      });
-    });
-  });
-
-  describe("Checking the transactipon type and updating the amount accordingly", function () {
-    it("Updates the debit transaction by adding || before the amount", function () {
-      transaction.transactionCheck();
-      expect(transaction.getAmount()).toEqual("|| 250");
+    it("requests the list of transactions for the account statement", function () {
+      testTransactionList.recordTransaction("debit", DEBIT_AMOUNT, ACCOUNT_BALANCE + DEBIT_AMOUNT);
+      expect(testTransactionList.requestTransactions()).toEqual(
+        "date || credit || debit || balance\n10/01/2012 || || 500 || 750"
+      );
     });
 
-    it("Updates the debit transaction by adding || before the amount", function () {
-      transaction = new Transaction("credit", 250, 500);
-      transaction.transactionCheck();
-      expect(transaction.getAmount()).toEqual("250 ||");
+    it("requests the list of transactions for the account statement for multiple dates", function () {
+      testTransactionList.recordTransaction("debit", DEBIT_AMOUNT, DEBIT_AMOUNT);
+      jasmine.clock().mockDate(new Date(2011, 12, 13));
+      testTransactionList.recordTransaction("debit", DEBIT_AMOUNT, DEBIT_AMOUNT * 2);
+      jasmine.clock().mockDate(new Date(2011, 12, 14));
+      testTransactionList.recordTransaction("credit", ACCOUNT_BALANCE, DEBIT_AMOUNT * 2 - ACCOUNT_BALANCE);
+      expect(testTransactionList.requestTransactions()).toEqual(
+        'date || credit || debit || balance\n' +
+        '14/01/2012 || 250 || || 750\n' +
+        '13/01/2012 || || 500 || 1000\n' +
+        '10/01/2012 || || 500 || 500'
+      );
     });
   });
 });
+

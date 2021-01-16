@@ -1,9 +1,9 @@
-transaction = {
+transactionList = {
   transactions: []
 }
 
-transaction.recordTransaction = function () {}
+transactionList.recordTransaction = function () {}
 
-transaction.requestTransactions = function () {}
+transactionList.requestTransactions = function () {}
 
-module.exports = transaction;
+module.exports = transactionList;

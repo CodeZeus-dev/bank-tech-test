@@ -14,7 +14,7 @@ describe("TransactionDate", function () {
 
   describe("Date Retrieval Functionality", function () {
     it("Gets the current date from the system", function () {
-      expect(TransactionDate.getDate()).toEqual(['11', '05', '2012']);
+      expect(TransactionDate.getDate()).toEqual("05/11/2012");
     });
   });
 });
