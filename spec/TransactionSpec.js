@@ -1,6 +1,6 @@
 'use strict';
 
-const Transaction = require('../lib/Transaction');
+const Transaction = require('../lib/TransactionList');
 
 describe('Transaction', function () {
   let testTransaction;
